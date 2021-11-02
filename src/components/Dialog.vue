@@ -1,27 +1,62 @@
 <template>
   <div id="dialog_app">
-    <button id="show-modal" class="btn btn-primary" @click="showModal = true">Show Modal</button>
-
-    <modal v-if="showModal" @close="showModal = false">
-      <h3 slot="header">custom header</h3>
-    </modal>
     <transition name="modal">
       <div class="modal-mask">
         <div class="modal-wrapper">
           <div class="modal-container">
             <div class="modal-header">
-              <slot name="header"> default header </slot>
+              <slot name="header"> Выберете параметры функции </slot>
             </div>
 
             <div class="modal-body">
-              <slot name="body"> default body </slot>
+              <slot name="body">
+                <form class="form-floating">
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="floatingInputValue"
+                    v-model="A"
+                    autocomplete="off"
+                  />
+                  <label for="floatingInputValue">Param A</label>
+                </form>
+
+                <form class="form-floating">
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="floatingInputValue"
+                    v-model="B"
+                    autocomplete="off"
+                  />
+                  <label for="floatingInputValue">Param B</label>
+                </form>
+                <form class="form-floating">
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="floatingInputValue"
+                    v-model="C"
+                    autocomplete="off"
+                  />
+                  <label for="floatingInputValue">Param C</label>
+                </form>
+              </slot>
             </div>
 
             <div class="modal-footer">
               <slot name="footer">
-                default footer
-                <button class="modal-default-button btn btn-primary" @click="$emit('close')">
-                  OK
+                <button
+                  class="modal-default-button btn btn-secondary"
+                  @click="closeDialog"
+                >
+                  Закрыть {{test}}
+                </button>
+                <button
+                  class="modal-default-button btn btn-primary"
+                  @click="saveParametrs"
+                >
+                  Сохранить
                 </button>
               </slot>
             </div>
@@ -34,6 +69,27 @@
 
 <script>
 export default {
+  name: "dialog_app",
+  data() {
+    return {
+      A: this.Aprop,
+      B: this.Bprop,
+      C: this.Cprop,
+    };
+  },
+  props: ['Aprop', 'Bprop', 'Cprop'],
+  methods: {
+    saveParametrs() {
+      this.$emit("updateData", {
+        aParam: this.A,
+        bParam: this.B,
+        cParam: this.C,
+      });
+    },
+    closeDialog() {
+      this.$emit("closeDialog");
+    },
+  },
 };
 </script>
 
@@ -65,7 +121,6 @@ export default {
   transition: all 0.3s ease;
   font-family: Helvetica, Arial, sans-serif;
 }
-
 .modal-header h3 {
   margin-top: 0;
   color: #42b983;
@@ -73,6 +128,7 @@ export default {
 
 .modal-body {
   margin: 20px 0;
+  padding: 10px 10px;
 }
 
 .modal-default-button {
@@ -100,5 +156,18 @@ export default {
 .modal-leave-active .modal-container {
   -webkit-transform: scale(1.1);
   transform: scale(1.1);
+}
+li {
+  list-style-type: none; /* Убираем маркеры */
+}
+ul {
+  margin-left: 0; /* Отступ слева в браузере IE и Opera */
+  padding-left: 0; /* Отступ слева в браузере Firefox, Safari, Chrome */
+}
+.close {
+  background-color: green;
+}
+.form-floating {
+  margin-bottom: 12px;
 }
 </style>

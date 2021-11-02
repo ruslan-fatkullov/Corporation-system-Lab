@@ -1,17 +1,17 @@
 <template>
   <div id="app">
-    <Graph/>
+    <MainComponent/>
   </div>
 </template>
 
 <script>
 
-import Graph from './components/Graph.vue'
+import MainComponent from './components/Main_Component.vue'
 
 export default {
   name: 'App',
   components: {
-    Graph,
+    MainComponent,
   },
 }
 </script>

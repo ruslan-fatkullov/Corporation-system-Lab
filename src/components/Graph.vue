@@ -1,7 +1,16 @@
 <template>
   <div class="small">
-    <Dialog/>
-    <div class="our-b btn btn-primary" type="submit" @click="fillData">Randomize</div>
+    
+    <Dialog
+      v-if="ifVisible"
+      @closeDialog = "closeDialog"
+      @updateData = "updateData"
+      v-bind:Aprop="A"
+      v-bind:Bprop="B"
+      v-bind:Cprop="C"
+    />
+    <button class="btn btn-primary" @click="showDialog">Chose parameters</button>
+    
     <line-chart :chart-data="datacollection" :options="options"></line-chart>
   </div>
 </template>
@@ -9,12 +18,9 @@
 <script>
 // Подключение компонента для отображения диаграммы
 import LineChart from "../components/LineCharts.js";
-import Dialog from "../components/Dialog.vue";
+import Dialog from '../components/Dialog.vue'
 
 const DATA_COUNT = 50;
-var A = Math.random() * 5;
-var B = 3;
-var C = 0;
 var labels = [];
 for (let i = -25; i <= DATA_COUNT / 2 + 1; ++i) {
   labels.push(i.toString());
@@ -29,6 +35,10 @@ export default {
   data() {
     return {
       // Данные для диаграммы
+      A : 2,
+      B : 2,
+      C : 2,
+      ifVisible: false,
       datacollection: null,
       // Настройка параметров диаграммы
       options: null,
@@ -78,11 +88,27 @@ export default {
     this.fillData();
   },
   methods: {
+
+    
+    showDialog() {
+      this.ifVisible = true;
+    },
+    closeDialog() {
+      this.ifVisible = false
+    },
+    updateData(data) {
+      this.A = data.aParam
+      this.B = data.bParam
+      this.C = data.cParam
+      this.fillData()
+      this.ifVisible = false
+    },
+
+
+
     // Функция, которая производит заполнение данных случайным образом
+  
     fillData() {
-      A = Math.random() * 10;  
-      B = Math.random() * 10;  
-      C = Math.random() * 999;  
       this.datacollection = {
         labels: labels,
         datasets: [
@@ -97,7 +123,7 @@ export default {
       };
     },
     randomScalingFactor(x) {
-      return Math.floor(A * Math.pow(x, 3) * Math.sin(B * x) - C);
+      return Math.floor(this.A * Math.pow(x, 3) * Math.sin(this.B * x) - this.C);
     },
     fillMassive() {
       var data = [];
